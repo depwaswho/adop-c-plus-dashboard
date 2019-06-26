@@ -40,17 +40,23 @@ const tableIcons = {
 function Users() {
     const [state, setState] = useState({
         columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Gitlab', field: 'gitlabRole', lookup: { 1: 'Admin', 0: 'Readonly' } },
-            { title: 'Jenkins', field: 'jenkinsRole', lookup: { 1: 'Admin', 0: 'Readonly' }},
+            { title: 'Name', field: 'name', cellStyle:{ padding: '7px'} },
+            { title: 'Gitlab', field: 'gitlabRole', lookup: { 1: 'Admin', 0: 'Readonly' }, sorting: false },
+            { title: 'Jenkins', field: 'jenkinsRole', lookup: { 1: 'Admin', 0: 'Readonly' }, sorting: false },
+            { title: 'Nexus', field: 'nexusRole', lookup: { 1: 'Admin', 0: 'Readonly' }, sorting: false },
+            { title: 'Sonarqube', field: 'sonarqubeRole', lookup: { 1: 'Admin', 0: 'Readonly' }, sorting: false },
+            { title: 'Kibana', field: 'kibanaRole', lookup: { 1: 'Admin', 0: 'Readonly' }, sorting: false },
+            // { title: 'Selenium', field: 'seleniumRole', lookup: { 1: 'Admin', 0: 'Readonly' }},
         ],
         data: [
-            { name: 'John Frederick', gitlabRole: 1 },
-            { name: 'Kris Anne Kay', jenkinsRole: 0 },
+            { name: 'John Frederick', jenkinsRole: 1, gitlabRole: 0 },
+            { name: 'Rhubel', jenkinsRole: 1, gitlabRole: 1 },
+            { name: 'Renn', jenkinsRole: 1, gitlabRole: 1 },
+            { name: 'Jayson', jenkinsRole: 1, gitlabRole: 1 },
         ],
     });
     return (
-        <Container maxWidth="md">
+        <Container>
             <br/>
             <MaterialTable
                 icons={tableIcons}

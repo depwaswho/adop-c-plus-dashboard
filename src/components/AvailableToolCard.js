@@ -31,8 +31,8 @@ function AvailableToolCard(props) {
     accept: 'tools',
     canDrop: () => false,
     hover(item) {
-      if (item.draggedId !== props.id && item.draggedType === props.type) {
-        const { index: overIndex } = props.findCard(props.id, props.type)
+      if (item.draggedId !== props.tool.id && item.draggedType === props.type) {
+        const { index: overIndex } = props.findCard(props.tool.id, props.type)
         props.moveCard(item.draggedId, overIndex, props.type)
       }
     }
@@ -40,9 +40,9 @@ function AvailableToolCard(props) {
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: 'tools',
-      draggedId: props.id,
+      draggedId: props.tool.id,
       draggedIndex: props.index,
-      draggedToolName: props.toolName,
+      draggedToolName: props.tool.name,
       draggedType: props.type
     },
     collect: monitor => ({
@@ -52,7 +52,7 @@ function AvailableToolCard(props) {
   drag(drop(ref))
   return (
     <Paper className={classes.paper} ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
-      <img src={props.image} alt={props.toolName} className={classes.img} draggable={false}></img>
+      <img src={props.tool.image} alt={props.tool.name} className={classes.img} draggable={false}></img>
     </Paper>
   );
 }

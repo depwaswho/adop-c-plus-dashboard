@@ -10,20 +10,21 @@ import TextField from '@material-ui/core/TextField';
 import { useDrag, useDrop } from 'react-dnd'
 
 const useStyles = makeStyles({
-    img: {
-        'max-height': '38px',
-        margin: 'auto',
-        display: 'block',
-        'max-width': '100%'
-    },
-    paper: {
-        height: '100%', 
-        overflowY: 'scroll',
-        overflowX: 'hidden'
-    },
-    form: {
-        margin: '10px'
-    }
+  img: {
+    'max-height': '38px',
+    margin: 'auto',
+    display: 'block',
+    'max-width': '100%'
+  },
+  paper: {
+    height: '100%', 
+    overflowY: 'scroll',
+    overflowX: 'hidden'
+  },
+  form: {
+    margin: '10px',
+    width: '90%'
+  }
 });
 
 function SelectedToolCard(props) {
@@ -33,8 +34,8 @@ function SelectedToolCard(props) {
     accept: 'selectedTools',
     canDrop: () => false,
     hover(item) {
-      if (item.draggedId !== props.id && item.draggedType === props.type) {
-          const { index: overIndex } = props.findCard(props.id, props.type)
+      if (item.draggedId !== props.tool.id && item.draggedType === props.type) {
+          const { index: overIndex } = props.findCard(props.tool.id, props.type)
           props.moveCard(item.draggedId, overIndex, props.type)
       }
     }
@@ -42,9 +43,9 @@ function SelectedToolCard(props) {
   const [{ isDragging }, drag] = useDrag({
     item: { 
       type: 'selectedTools',
-      draggedId: props.id,
+      draggedId: props.tool.id,
       draggedIndex: props.index,
-      draggedToolName: props.toolName,
+      draggedToolName: props.tool.name,
       draggedType: props.type
     },
     collect: monitor => ({
@@ -54,23 +55,27 @@ function SelectedToolCard(props) {
   drag(drop(ref))
   return (
     <Paper className={classes.paper} ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
-        <div style={{ margin: '10px' }}>
-        <img src={props.image} alt={props.toolName} className={classes.img} draggable={false}></img>
-        </div>
-        <Divider/>
-        <FormControl className={classes.form}>
-            <InputLabel shrink htmlFor="age-native-label-placeholder">VERSION</InputLabel>
-            <NativeSelect input={<Input name="age" id="age-native-label-placeholder" />}>
-                <option value="">latest</option>
-                <option value={10}>1.0</option>
-                <option value={20}>2.0</option>
-                <option value={30}>3.0</option>
-            </NativeSelect>
-            <TextField label="Username" margin="dense"/>
-            <TextField label="Password" type="password" margin="dense"/>
-            <br/>
-        </FormControl>
+      <div style={{ margin: '10px' }}>
+      <img src={props.tool.image} alt={props.tool.name} className={classes.img} draggable={false}></img>
+      </div>
+      <Divider/>
+      <FormControl key={props.tool.id} className={classes.form}>
+        <InputLabel shrink htmlFor="tool-version">VERSION</InputLabel>
+        <NativeSelect input={<Input name="age" id="tool-version" />}>
+          {props.tool.availableVersions.map(item => (
+            <option key={item} value={item}>{item}</option>
+          ))}
+        </NativeSelect>
+        {props.tool.fields.map(item => (
+          item.type === 'text'? (
+            <TextField key={item.name} label={item.label} margin="dense"/>
+          ) : (
+            <TextField key={item.name} label={item.label} type="password" margin="dense"/>
+          )
+        ))}
         <br/>
+      </FormControl>
+      <br/>
     </Paper>
   );
 }

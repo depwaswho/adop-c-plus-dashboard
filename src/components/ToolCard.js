@@ -15,35 +15,49 @@ const useStyles = makeStyles({
   media: {
     height: 90,
     'background-size': '60%'
+  },
+  aa: {
+    paddingTop: "5px",
+    paddingBottom: "5px"
   }
+
 });
 
 function ToolCard(props) {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
-      <CardActionArea className={classes.card}>
+    <Grid container>
+    <Grid item>
+      <CardActionArea>
         <CardMedia
           className={classes.media}
           image={props.image}
-          title={props.alt}
+          title={props.name}
         />
         <CardContent className={classes.content}>
           <Typography gutterBottom variant="body2" component="h3">
-            {props.toolDescription}
+            {props.description}
           </Typography>
         </CardContent>
-        
       </CardActionArea>
-      <CardActions>
+      </Grid>
+      <Grid item>
+      <CardActions className={classes.aa}>
         <Button size="small" color="primary">
-          Share
+          Start
         </Button>
         <Button size="small" color="primary">
-          Learn More
+          Stop
         </Button>
-        </CardActions>
+        <Button size="small" color="primary">
+          Logs
+        </Button>
+      </CardActions>
+      </Grid>
+      </Grid>
     </Card>
+    
   );
 }
 

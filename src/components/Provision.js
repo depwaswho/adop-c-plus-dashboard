@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import AvailableToolCard from './AvailableToolCard';
-import ToolsAPI from '../tools.js'
+import Tools from '../tools.js'
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import Grid from '@material-ui/core/Grid';
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 function Provision() {
     const classes = useStyles();
-    const [tools, setTools] = useState(ToolsAPI.all());
+    const [tools, setTools] = useState(Tools);
     const [selectedTools, setSelectedTools] = useState([]);
     const [showLogs, setshowLogs] = useState(true);
     const [logs, setLogs] = useState("");
@@ -97,24 +97,27 @@ function Provision() {
     return (
         <div>
             <div className={classes.root}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                     <Grid item md={12}>
                         <MuiThemeProvider theme={greenTheme}>
-                            <Button 
+                            <Button
                                 disabled={selectedTools.length === 0} 
                                 variant="contained" color="primary" 
                                 className={classes.startButton}
-                                onClick={() => { socket.emit('execute', 'ansible') }}>
+                                onClick={() => {
+                                    socket.connected?
+                                    socket.emit('execute', 'ansible') : setLogs('Unable to start, Not connected to socket!')
+                                }}>
                                 Start
                             </Button>
                         </MuiThemeProvider>
                         <FormControlLabel
                             control={
-                            <Switch
-                                checked={showLogs}
-                                onChange={handleShowLogs}
-                                color="primary"
-                            />
+                                <Switch
+                                    checked={showLogs}
+                                    onChange={handleShowLogs}
+                                    color="primary"
+                                />
                             }
                             label="Show logs"
                         />
@@ -128,11 +131,7 @@ function Provision() {
                             <GridListTile key={item.id}>
                                 <AvailableToolCard
                                     index={index}
-                                    id={item.id}
-                                    image={item.image}
-                                    alt={item.alt} 
-                                    toolName={item.toolName} 
-                                    toolDescription={item.toolDescription}
+                                    tool={item}
                                     moveCard={moveCard}
                                     findCard={findCard}
                                     type={1}
@@ -148,13 +147,9 @@ function Provision() {
                         <GridList className={classes.gridList} ref={drop} cellHeight={210} cols={4}>
                             {selectedTools.map((item, index) => (
                                 <GridListTile key={item.id}>
-                                    <SelectedToolCard 
+                                    <SelectedToolCard
                                         index={index}
-                                        id={item.id}
-                                        image={item.image}
-                                        alt={item.alt}
-                                        toolName={item.toolName}
-                                        toolDescription={item.toolDescription}
+                                        tool={item}
                                         moveCard={moveCard}
                                         findCard={findCard}
                                         type={2}
@@ -164,9 +159,7 @@ function Provision() {
                         </GridList>
                     </Grid>
                 </Grid>
-                <br/>
-                <br/>
-                <br/>
+                <br/><br/><br/>
                 {showLogs && <LogViewer title="Ansible Logs" logs={logs}/>}
             </div>
         </div>
